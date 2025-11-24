@@ -145,19 +145,19 @@ const UserManagement: React.FC<{ setActiveTab: (tab: string) => void }> = ({ set
             {isModalOpen && <UserFormModal user={editingUser} onClose={() => setIsModalOpen(false)} onSave={handleSaveUser} />}
             {isConfirmOpen && deletingUser && <ConfirmationModal onConfirm={handleDeleteUser} onCancel={() => setIsConfirmOpen(false)} userName={deletingUser.name}/>}
             
-            <button onClick={() => setActiveTab('home')} className="text-sm text-primary-600 dark:text-primary-400 hover:underline mb-2">
+            <button onClick={() => setActiveTab('home')} className="text-sm text-gray-600 dark:text-gray-400 hover:underline mb-2">
                 &larr; Voltar ao Painel
             </button>
 
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Gestão de Utilizadores</h1>
-                <button onClick={openAddModal} className="flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition">
+                <button onClick={openAddModal} className="flex items-center space-x-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition">
                     <span>{ICONS.plus}</span>
                     <span>Adicionar Utilizador</span>
                 </button>
             </div>
             
-             <div className="sticky top-0 bg-gray-50 dark:bg-black py-2">
+             <div className="sticky top-0 bg-gray-50 dark:bg-slate-900 py-2">
                 <input
                     type="text"
                     placeholder="Procurar por nome do utilizador..."
@@ -175,7 +175,7 @@ const UserManagement: React.FC<{ setActiveTab: (tab: string) => void }> = ({ set
                                 <p className="text-sm text-gray-500 dark:text-gray-400">{user.role}</p>
                             </div>
                             <div className="flex space-x-2">
-                                <button onClick={() => openEditModal(user)} className="p-2 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-full">{ICONS.edit}</button>
+                                <button onClick={() => openEditModal(user)} className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full">{ICONS.edit}</button>
                                 <button onClick={() => openConfirmModal(user)} className="p-2 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 rounded-full">{ICONS.trash}</button>
                             </div>
                         </li>

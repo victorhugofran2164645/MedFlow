@@ -24,13 +24,13 @@ const PrescriptionItem: React.FC<{
                 disabled={!isPending}
                 className={`w-full text-left p-4 rounded-xl transition-all border ${
                     isPending 
-                        ? 'bg-white border-blue-200 shadow-sm hover:shadow-md hover:border-blue-400 dark:bg-slate-800 dark:border-slate-700' 
+                        ? 'bg-white border-gray-200 shadow-sm hover:shadow-md hover:border-gray-400 dark:bg-slate-800 dark:border-slate-700' 
                         : 'bg-gray-50 border-gray-100 text-gray-500 dark:bg-slate-800/50 dark:border-transparent dark:text-gray-500 opacity-60 cursor-not-allowed'
                 }`}
             >
                 <div className="flex justify-between items-center">
                     <div>
-                        <p className="font-bold text-lg text-blue-900 dark:text-blue-100">{prescription.medicationId} {prescription.dosage}</p>
+                        <p className="font-bold text-lg text-gray-800 dark:text-gray-100">{prescription.medicationId} {prescription.dosage}</p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">{prescription.patientName} - Quarto {prescription.patientRoom}</p>
                     </div>
                     <span className={`text-xs font-bold px-3 py-1 rounded-full border ${isPending ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-900' : 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700'}`}>
@@ -92,7 +92,7 @@ const PharmacistDashboard: React.FC = () => {
                     onClose={() => setSelectedPrescription(null)}
                 />
             )}
-            <h1 className="text-3xl font-bold text-blue-900 dark:text-white">Painel de Farmácia</h1>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Painel de Farmácia</h1>
             
             <Card title="Aguardando Validação">
                 {pendingPrescriptions.length > 0 ? (
@@ -102,13 +102,13 @@ const PharmacistDashboard: React.FC = () => {
                         ))}
                     </ul>
                 ) : (
-                    <p className="text-center text-blue-400 dark:text-gray-400 py-6 font-medium">Todas as prescrições foram validadas.</p>
+                    <p className="text-center text-gray-400 dark:text-gray-400 py-6 font-medium">Todas as prescrições foram validadas.</p>
                 )}
             </Card>
 
             <Card title="Histórico Recente">
                  {processedPrescriptions.length > 0 ? (
-                    <ul className="space-y-4 max-h-80 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-blue-100">
+                    <ul className="space-y-4 max-h-80 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
                         {processedPrescriptions.map(p => (
                             <PrescriptionItem key={p.id} prescription={p} onSelect={() => {}} />
                         ))}

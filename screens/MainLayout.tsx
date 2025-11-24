@@ -81,10 +81,10 @@ const MainLayout: React.FC = () => {
     };
 
     return (
-        <div className="flex flex-col h-screen max-h-screen bg-blue-50 dark:bg-slate-900 transition-colors duration-200">
-          <div className="w-full max-w-4xl mx-auto flex flex-col h-full bg-white dark:bg-slate-800 shadow-2xl border-x border-blue-100 dark:border-slate-700">
+        <div className="flex flex-col h-screen max-h-screen bg-gray-50 dark:bg-slate-950 transition-colors duration-200">
+          <div className="w-full max-w-4xl mx-auto flex flex-col h-full bg-white dark:bg-slate-900 shadow-2xl border-x border-gray-200 dark:border-slate-800">
               <Header />
-              <main className="flex-1 overflow-y-auto pb-20 scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-transparent">
+              <main className="flex-1 overflow-y-auto pb-20 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                   {renderContent()}
               </main>
               <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />

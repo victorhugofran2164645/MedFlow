@@ -33,10 +33,10 @@ const StatCard: React.FC<{ title: string; value: string; color: string; icon: Re
 
 const getRoleStyle = (role: UserRole) => {
     switch (role) {
-        case UserRole.Admin: return { bg: 'bg-indigo-50 dark:bg-indigo-900/30', text: 'text-indigo-700 dark:text-indigo-300' };
-        case UserRole.Doctor: return { bg: 'bg-blue-50 dark:bg-blue-900/30', text: 'text-blue-700 dark:text-blue-300' };
-        case UserRole.Nurse: return { bg: 'bg-sky-50 dark:bg-sky-900/30', text: 'text-sky-700 dark:text-sky-300' };
-        case UserRole.Pharmacist: return { bg: 'bg-teal-50 dark:bg-teal-900/30', text: 'text-teal-700 dark:text-teal-300' };
+        case UserRole.Admin: return { bg: 'bg-gray-50 dark:bg-gray-800', text: 'text-gray-700 dark:text-gray-300' };
+        case UserRole.Doctor: return { bg: 'bg-slate-50 dark:bg-slate-800', text: 'text-slate-700 dark:text-slate-300' };
+        case UserRole.Nurse: return { bg: 'bg-zinc-50 dark:bg-zinc-800', text: 'text-zinc-700 dark:text-zinc-300' };
+        case UserRole.Pharmacist: return { bg: 'bg-stone-50 dark:bg-stone-800', text: 'text-stone-700 dark:text-stone-300' };
         default: return { bg: 'bg-gray-50 dark:bg-slate-700', text: 'text-gray-600 dark:text-gray-300' };
     }
 }
@@ -117,34 +117,34 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ setActiveTab, setStockF
 
     return (
         <div className="p-4 space-y-6 animate-fade-in">
-            <h1 className="text-3xl font-bold text-blue-900 dark:text-white mb-6">Painel do Administrador</h1>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Painel do Administrador</h1>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <StatCard 
                     title="Medicamentos" 
                     value={totalStock.toLocaleString('pt-BR')} 
-                    color="bg-gradient-to-br from-blue-500 to-blue-700"
+                    color="bg-gradient-to-br from-slate-500 to-slate-700"
                     icon={ICONS.box}
                     onClick={() => { setStockFilter('all'); setActiveTab('stock'); }} 
                 />
                 <StatCard 
                     title="Stock Baixo" 
                     value={lowStockCount.toString()} 
-                    color="bg-gradient-to-br from-amber-400 to-amber-600"
+                    color="bg-gradient-to-br from-amber-500 to-amber-700"
                     icon={React.cloneElement(ICONS.alertTriangle, { className: "h-6 w-6"})}
                     onClick={() => { setStockFilter('low_stock'); setActiveTab('stock'); }}
                 />
                 <StatCard 
                     title="A Expirar" 
                     value={expiringSoonCount.toString()} 
-                    color="bg-gradient-to-br from-rose-500 to-rose-700"
+                    color="bg-gradient-to-br from-red-500 to-red-700"
                     icon={ICONS.calendar}
                     onClick={() => { setStockFilter('expiring_soon'); setActiveTab('stock'); }}
                 />
                 <StatCard 
                     title="Utilizadores" 
                     value="256" 
-                    color="bg-gradient-to-br from-emerald-500 to-emerald-700"
+                    color="bg-gradient-to-br from-emerald-600 to-emerald-800"
                     icon={ICONS.users}
                     onClick={() => setActiveTab('userManagement')} 
                 />
@@ -157,10 +157,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ setActiveTab, setStockF
                 <div className="lg:col-span-2">
                      <Card title="Ações Rápidas">
                         <div className="grid grid-cols-2 gap-3">
-                            <button onClick={() => setActiveTab('userManagement')} className="p-4 text-sm font-semibold bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition shadow-md">Gerir Utilizadores</button>
-                            <button onClick={() => alert('Funcionalidade em desenvolvimento.')} className="p-4 text-sm font-semibold bg-white border border-blue-200 text-blue-700 rounded-xl hover:bg-blue-50 transition">Relatórios</button>
-                            <button onClick={() => alert('Funcionalidade em desenvolvimento.')} className="p-4 text-sm font-semibold bg-white border border-blue-200 text-blue-700 rounded-xl hover:bg-blue-50 transition">Configurações</button>
-                            <button onClick={() => setActiveTab('audit')} className="p-4 text-sm font-semibold bg-white border border-blue-200 text-blue-700 rounded-xl hover:bg-blue-50 transition">Auditoria</button>
+                            <button onClick={() => setActiveTab('userManagement')} className="p-4 text-sm font-semibold bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition shadow-md">Gerir Utilizadores</button>
+                            <button onClick={() => alert('Funcionalidade em desenvolvimento.')} className="p-4 text-sm font-semibold bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition">Relatórios</button>
+                            <button onClick={() => alert('Funcionalidade em desenvolvimento.')} className="p-4 text-sm font-semibold bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition">Configurações</button>
+                            <button onClick={() => setActiveTab('audit')} className="p-4 text-sm font-semibold bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition">Auditoria</button>
                         </div>
                     </Card>
                 </div>
@@ -171,7 +171,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ setActiveTab, setStockF
                     {mockRecentActivity.map((log, index) => {
                         const style = getRoleStyle(log.userRole);
                         return (
-                           <li key={index} className={`flex items-start space-x-4 p-4 rounded-xl border border-transparent ${style.bg} hover:border-blue-100 transition-colors`}>
+                           <li key={index} className={`flex items-start space-x-4 p-4 rounded-xl border border-transparent ${style.bg} hover:border-gray-200 transition-colors`}>
                                <div className={`w-10 h-10 rounded-full flex-shrink-0 ${style.text} bg-white dark:bg-slate-800 flex items-center justify-center font-bold text-sm shadow-sm`}>
                                    {log.userName.split(' ').map(n=>n[0]).join('').substring(0,2)}
                                </div>
@@ -181,7 +181,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ setActiveTab, setStockF
                                        <span className="text-gray-600 dark:text-gray-400"> {log.action === 'Medicação Administrada' ? 'administrou' : log.action === 'Medicação Dispensada' ? 'dispensou' : log.action === 'Medicação Prescrita' ? 'prescreveu' : 'realizou a ação'} </span> 
                                        <span className="font-semibold text-gray-900 dark:text-white">{log.details.split(' para ')[0]}</span>.
                                    </p>
-                                    <p className="text-xs text-blue-400 dark:text-gray-500 font-medium mt-1">{formatTimeAgo(log.timestamp)}</p>
+                                    <p className="text-xs text-gray-400 dark:text-gray-500 font-medium mt-1">{formatTimeAgo(log.timestamp)}</p>
                                </div>
                            </li>
                         )

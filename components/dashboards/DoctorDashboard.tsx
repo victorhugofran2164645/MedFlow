@@ -11,11 +11,11 @@ const PatientListItem: React.FC<{ patient: Patient; onSelect: (patient: Patient)
     <li>
         <button
             onClick={() => onSelect(patient)}
-            className="w-full text-left p-4 bg-white dark:bg-slate-800 rounded-xl border border-blue-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 transition shadow-sm hover:shadow-md group"
+            className="w-full text-left p-4 bg-white dark:bg-slate-800 rounded-xl border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 transition shadow-sm hover:shadow-md group"
         >
             <div className="flex justify-between items-center">
                 <div>
-                    <p className="font-bold text-lg text-blue-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-300">{patient.name}</p>
+                    <p className="font-bold text-lg text-gray-800 dark:text-white group-hover:text-gray-900 dark:group-hover:text-gray-200">{patient.name}</p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">Quarto {patient.room}</p>
                 </div>
                 {patient.allergies.length > 0 && (
@@ -31,7 +31,7 @@ const PatientListItem: React.FC<{ patient: Patient; onSelect: (patient: Patient)
 const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onSelectPatient }) => {
     return (
         <div className="p-4 space-y-6 animate-fade-in">
-            <h1 className="text-3xl font-bold text-blue-900 dark:text-white">Painel do Médico</h1>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Painel do Médico</h1>
             <Card title="Meus Pacientes">
                 <ul className="space-y-4">
                     {mockPatients.map(patient => (

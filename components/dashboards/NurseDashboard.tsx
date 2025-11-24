@@ -12,19 +12,19 @@ const TaskItem: React.FC<{ task: Task; onStart: (task: Task) => void }> = ({ tas
 
     return (
         <li className={`p-4 rounded-xl flex items-center justify-between transition-all shadow-sm ${
-            isCompleted ? 'bg-blue-50 border border-blue-200 dark:bg-emerald-900/20 dark:border-emerald-900/30 opacity-70' : 
+            isCompleted ? 'bg-gray-50 border border-gray-200 dark:bg-emerald-900/20 dark:border-emerald-900/30 opacity-70' : 
             isOverdue ? 'bg-white border-l-4 border-l-red-500 border-y border-r border-gray-200 dark:bg-red-900/10 dark:border-red-900/50' : 
-            'bg-white border border-blue-200 hover:border-blue-400 dark:bg-slate-800 dark:border-slate-700'
+            'bg-white border border-gray-200 hover:border-gray-400 dark:bg-slate-800 dark:border-slate-700'
         }`}>
             <div>
-                <p className={`font-bold text-lg ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-blue-900 dark:text-blue-100'}`}>{task.medication} {task.dosage}</p>
+                <p className={`font-bold text-lg ${isOverdue ? 'text-red-600 dark:text-red-400' : 'text-gray-800 dark:text-gray-100'}`}>{task.medication} {task.dosage}</p>
                 <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{task.patientName} <span className="text-gray-400 font-normal">|</span> Quarto {task.room}</p>
-                <p className="text-xs text-blue-500 dark:text-gray-400 font-semibold mt-1">Horário: {task.time}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 font-semibold mt-1">Horário: {task.time}</p>
             </div>
             {!isCompleted ? (
                  <button
                     onClick={() => onStart(task)}
-                    className="flex items-center space-x-2 px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md transition-colors"
+                    className="flex items-center space-x-2 px-4 py-2 text-sm font-bold text-white bg-gray-700 hover:bg-gray-800 rounded-lg shadow-md transition-colors"
                 >
                     <span>Administrar</span>
                 </button>
@@ -76,7 +76,7 @@ const NurseDashboard: React.FC = () => {
             {isScanning && <QRScanner taskToVerify={currentTask} onScanSuccess={handleScanSuccess} onClose={handleCancel} />}
             {isVerifying && currentTask && <MedicationVerification task={currentTask} onConfirm={handleConfirmAdministration} onCancel={handleCancel} />}
             
-            <h1 className="text-3xl font-bold text-blue-900 dark:text-white">Painel de Enfermagem</h1>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Painel de Enfermagem</h1>
             
             <Card title="Tarefas Pendentes">
                 {upcomingTasks.length > 0 ? (
@@ -86,7 +86,7 @@ const NurseDashboard: React.FC = () => {
                         ))}
                     </ul>
                 ) : (
-                    <p className="text-center text-blue-400 dark:text-gray-400 py-6 font-medium">Nenhuma tarefa pendente.</p>
+                    <p className="text-center text-gray-400 dark:text-gray-400 py-6 font-medium">Nenhuma tarefa pendente.</p>
                 )}
             </Card>
 

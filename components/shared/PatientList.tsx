@@ -20,23 +20,23 @@ const PatientList: React.FC<PatientListProps> = ({ onSelectPatient }) => {
 
     return (
         <div className="p-4 space-y-4">
-            <h1 className="text-3xl font-bold text-blue-900 dark:text-white mb-2">Lista de Pacientes</h1>
-            <div className="sticky top-0 bg-blue-50 dark:bg-slate-900 py-2 z-10">
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">Lista de Pacientes</h1>
+            <div className="sticky top-0 bg-gray-50 dark:bg-slate-900 py-2 z-10">
                  <input
                     type="text"
                     placeholder="Procurar por nome ou quarto..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full p-3 border border-blue-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all"/>
+                    className="w-full p-3 border border-gray-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 shadow-sm transition-all"/>
             </div>
             <ul className="space-y-4">
                 {filteredPatients.map(patient => (
                     <li key={patient.id}>
                         <button
                             onClick={() => onSelectPatient(patient)}
-                            className="w-full text-left p-5 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-blue-200 dark:border-slate-700 hover:shadow-md hover:border-blue-400 dark:hover:border-blue-500 transition-all duration-200"
+                            className="w-full text-left p-5 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200"
                         >
-                             <p className="font-bold text-lg text-blue-900 dark:text-blue-100">{patient.name}</p>
+                             <p className="font-bold text-lg text-gray-800 dark:text-gray-100">{patient.name}</p>
                              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">Quarto {patient.room}</p>
                         </button>
                     </li>

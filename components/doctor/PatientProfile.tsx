@@ -26,7 +26,7 @@ const TabButton: React.FC<{ active: boolean; onClick: () => void; children: Reac
         onClick={onClick}
         className={`px-4 py-2 text-sm font-medium transition-colors ${
             active
-                ? 'border-b-2 border-primary-500 text-primary-600 dark:text-primary-400'
+                ? 'border-b-2 border-gray-800 text-gray-900 dark:text-gray-100 dark:border-gray-200'
                 : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
         }`}
     >
@@ -154,7 +154,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ patient, onBack }) => {
                                     </div>
                                     <div className="flex flex-col items-end space-y-2">
                                         <span className={`text-xs font-bold px-2 py-1 rounded-full ${ p.status === PrescriptionStatus.Administered ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300'}`}>{p.status}</span>
-                                        <button onClick={() => handleEditClick(p)} className="p-1.5 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-full">{React.cloneElement(ICONS.edit, { className: "h-4 w-4"})}</button>
+                                        <button onClick={() => handleEditClick(p)} className="p-1.5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full">{React.cloneElement(ICONS.edit, { className: "h-4 w-4"})}</button>
                                     </div>
                                 </div>
                             </li>
@@ -171,13 +171,13 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ patient, onBack }) => {
                         administrationHistory.map(record => {
                             const isSystemRecord = record.administeredBy === 'Sistema';
                             return (
-                                <li key={record.id} className={`p-3 rounded-md ${isSystemRecord ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-gray-50 dark:bg-gray-700/50'}`}>
+                                <li key={record.id} className={`p-3 rounded-md ${isSystemRecord ? 'bg-gray-50 dark:bg-slate-700' : 'bg-gray-50 dark:bg-gray-700/50'}`}>
                                     <p className="font-semibold">{record.medication} {record.dosage}</p>
                                     <p className="text-xs text-gray-400">
                                         {isSystemRecord ? 'Evento em: ' : 'Administrado em: '}
                                         {new Date(record.administeredAt).toLocaleString()} por <strong>{record.administeredBy}</strong>
                                     </p>
-                                    {record.notes && <p className={`text-sm mt-1 italic ${isSystemRecord ? 'text-blue-700 dark:text-blue-300' : 'text-gray-600 dark:text-gray-300'}`}>"{record.notes}"</p>}
+                                    {record.notes && <p className={`text-sm mt-1 italic ${isSystemRecord ? 'text-gray-700 dark:text-gray-300' : 'text-gray-600 dark:text-gray-300'}`}>"{record.notes}"</p>}
                                 </li>
                             );
                         })
@@ -213,7 +213,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ patient, onBack }) => {
 
                 <div className="flex justify-end items-center space-x-3 pt-4">
                      <button type="button" onClick={handleCancelPrescription} className="px-4 py-2 text-sm font-medium bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600">Cancelar</button>
-                    <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700">{editingPrescription ? 'Salvar Alterações' : 'Salvar Prescrição'}</button>
+                    <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-md hover:bg-gray-900">{editingPrescription ? 'Salvar Alterações' : 'Salvar Prescrição'}</button>
                 </div>
             </form>
         </Card>
@@ -223,7 +223,7 @@ const PatientProfile: React.FC<PatientProfileProps> = ({ patient, onBack }) => {
         <div className="p-4 space-y-4 animate-fade-in">
              {showSuccess && <SuccessToast message={successMessage} onDismiss={() => setShowSuccess(false)} />}
             <div>
-                <button onClick={onBack} className="text-sm text-primary-600 dark:text-primary-400 hover:underline mb-4 flex items-center space-x-1">
+                <button onClick={onBack} className="text-sm text-gray-600 dark:text-gray-400 hover:underline mb-4 flex items-center space-x-1">
                     <span>&larr;</span>
                     <span>Voltar à Lista de Pacientes</span>
                 </button>

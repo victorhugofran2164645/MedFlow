@@ -16,7 +16,7 @@ const NursePatientDetailView: React.FC<NursePatientDetailViewProps> = ({ patient
     return (
         <div className="p-4 space-y-4 animate-fade-in">
              <div>
-                <button onClick={onBack} className="text-sm text-primary-600 dark:text-primary-400 hover:underline mb-4 flex items-center space-x-1">
+                <button onClick={onBack} className="text-sm text-gray-600 dark:text-gray-400 hover:underline mb-4 flex items-center space-x-1">
                     <span>&larr;</span>
                     <span>Voltar à Lista de Pacientes</span>
                 </button>

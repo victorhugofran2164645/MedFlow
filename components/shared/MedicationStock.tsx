@@ -17,8 +17,8 @@ const getStatusColor = (quantity: number, expiryDate: string): string => {
         return 'border-l-4 border-l-red-500 bg-white dark:bg-slate-800 border-y border-r border-red-100 dark:border-red-900/30';
     }
     
-    // Verde: Stock saudável - Estilo Blue/White limpo
-    return 'border-l-4 border-l-emerald-500 bg-white dark:bg-slate-800 border-y border-r border-blue-100 dark:border-slate-700';
+    // Verde: Stock saudável - Estilo Gray/Clean
+    return 'border-l-4 border-l-emerald-500 bg-white dark:bg-slate-800 border-y border-r border-gray-200 dark:border-slate-700';
 };
 
 
@@ -42,11 +42,11 @@ const MedicationStockItem: React.FC<{ item: MedicationStockType }> = ({ item }) 
         >
             <div className="flex justify-between items-start">
                 <div>
-                    <p className="font-bold text-lg text-blue-900 dark:text-white">{item.name} <span className="font-medium text-sm text-gray-500 dark:text-gray-400 ml-1">{item.dosage}</span></p>
+                    <p className="font-bold text-lg text-gray-800 dark:text-white">{item.name} <span className="font-medium text-sm text-gray-500 dark:text-gray-400 ml-1">{item.dosage}</span></p>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.manufacturer} <span className="mx-1">•</span> Lote: {item.lotNumber}</p>
                 </div>
                 <div className="text-right">
-                    <p className="font-bold text-xl text-blue-800 dark:text-blue-300">{item.quantity}</p>
+                    <p className="font-bold text-xl text-gray-700 dark:text-gray-300">{item.quantity}</p>
                     <p className="text-xs text-gray-500 dark:text-gray-400">Exp: {formatDate(item.expiryDate)}</p>
                 </div>
             </div>
@@ -96,30 +96,30 @@ const MedicationStock: React.FC<MedicationStockProps> = ({ stockFilter, setStock
     return (
         <div className="p-4 space-y-4">
             <div className="flex justify-between items-center mb-2">
-                <h1 className="text-3xl font-bold text-blue-900 dark:text-white">Stock</h1>
+                <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Stock</h1>
                 <button
                     onClick={() => alert('A abrir formulário para adicionar novo stock de medicação.')}
-                    className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm font-semibold">
+                    className="flex items-center space-x-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition shadow-sm font-semibold">
                     <span>{ICONS.plus}</span>
                     <span className="hidden sm:inline">Adicionar</span>
                 </button>
             </div>
 
             {stockFilter !== 'all' && (
-                <div className="flex items-center p-3 bg-white border border-blue-200 text-blue-800 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-200 rounded-lg animate-fade-in shadow-sm">
+                <div className="flex items-center p-3 bg-white border border-gray-200 text-gray-800 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 rounded-lg animate-fade-in shadow-sm">
                     <p className="text-sm font-semibold">
                         {filterMessages[stockFilter]}
                     </p>
                 </div>
             )}
 
-             <div className="sticky top-0 bg-blue-50 dark:bg-slate-900 py-2 z-10">
+             <div className="sticky top-0 bg-gray-50 dark:bg-slate-900 py-2 z-10">
                 <input
                     type="text"
                     placeholder="Procurar medicação por nome ou lote..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
-                    className="w-full p-3 border border-blue-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all"/>
+                    className="w-full p-3 border border-gray-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 focus:ring-2 focus:ring-gray-500 focus:border-gray-500 shadow-sm transition-all"/>
             </div>
             <ul className="space-y-4">
                 {filteredStock.length > 0
