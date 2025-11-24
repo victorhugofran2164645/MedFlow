@@ -1,51 +1,43 @@
 import React from 'react';
-import { ICONS } from '../../constants';
 import { Patient } from '../../types';
+import { mockPatients } from '../../constants';
 import Card from '../shared/Card';
 
-const mockPatients: Patient[] = [
-    { id: 'p001', name: 'John Doe', room: '301A', allergies: ['Penicillin'] },
-    { id: 'p002', name: 'Jane Smith', room: '302B', allergies: [] },
-    { id: 'p003', name: 'Robert Johnson', room: '304A', allergies: ['Aspirin', 'Sulfa'] },
-];
+interface DoctorDashboardProps {
+    onSelectPatient: (patient: Patient) => void;
+}
 
-const PatientItem: React.FC<{ patient: Patient }> = ({ patient }) => (
-    <li className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md">
-        <div>
-            <p className="font-semibold">{patient.name}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Quarto: {patient.room}</p>
-            {patient.allergies.length > 0 && 
-                <p className="text-xs text-red-500">Alergias: {patient.allergies.join(', ')}</p>
-            }
-        </div>
+const PatientListItem: React.FC<{ patient: Patient; onSelect: (patient: Patient) => void }> = ({ patient, onSelect }) => (
+    <li>
         <button
-            onClick={() => alert(`A iniciar nova prescrição para ${patient.name}.`)} 
-            className="p-2 bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-300 rounded-full hover:bg-primary-200 dark:hover:bg-primary-800 transition"
-            aria-label={`Prescrever para ${patient.name}`}
+            onClick={() => onSelect(patient)}
+            className="w-full text-left p-4 bg-white dark:bg-slate-800 rounded-xl border border-blue-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 transition shadow-sm hover:shadow-md group"
         >
-            {ICONS.plus}
+            <div className="flex justify-between items-center">
+                <div>
+                    <p className="font-bold text-lg text-blue-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-300">{patient.name}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Quarto {patient.room}</p>
+                </div>
+                {patient.allergies.length > 0 && (
+                    <span className="text-xs font-bold text-red-600 dark:text-red-300 bg-red-50 dark:bg-red-900/40 px-3 py-1 rounded-full border border-red-100 dark:border-red-900">
+                        {patient.allergies.length} Alergia(s)
+                    </span>
+                )}
+            </div>
         </button>
     </li>
 );
 
-const DoctorDashboard: React.FC = () => {
+const DoctorDashboard: React.FC<DoctorDashboardProps> = ({ onSelectPatient }) => {
     return (
-        <div className="p-4 space-y-6">
-            <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Painel do Médico</h1>
-            
-            <Card title="Os Meus Pacientes">
-                <div className="mb-4">
-                    <input type="text" placeholder="Procurar pacientes..." className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-transparent"/>
-                </div>
-                <ul className="space-y-2">
-                    {mockPatients.map(p => <PatientItem key={p.id} patient={p} />)}
+        <div className="p-4 space-y-6 animate-fade-in">
+            <h1 className="text-3xl font-bold text-blue-900 dark:text-white">Painel do Médico</h1>
+            <Card title="Meus Pacientes">
+                <ul className="space-y-4">
+                    {mockPatients.map(patient => (
+                        <PatientListItem key={patient.id} patient={patient} onSelect={onSelectPatient} />
+                    ))}
                 </ul>
-            </Card>
-
-            <Card title="Alertas Pendentes">
-                 <div className="flex items-center p-3 bg-yellow-100 dark:bg-yellow-900/50 rounded-md">
-                    <p className="text-yellow-800 dark:text-yellow-200 text-sm">Os resultados laboratoriais de <span className="font-semibold">Jane Smith</span> estão prontos para revisão.</p>
-                </div>
             </Card>
         </div>
     );

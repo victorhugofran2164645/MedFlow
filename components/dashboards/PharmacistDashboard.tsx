@@ -1,62 +1,121 @@
-import React from 'react';
-import Card from '../shared/Card';
-import { ICONS } from '../../constants';
+import React, { useState, useMemo } from 'react';
 import { Prescription, PrescriptionStatus } from '../../types';
+import { mockPatients } from '../../constants';
+import Card from '../shared/Card';
+import PrescriptionValidationModal from '../pharmacist/PrescriptionValidationModal';
 
-const mockPrescriptions: Prescription[] = [
-    { id: 'presc001', patientId: 'p001', medicationId: 'med01', dosage: '500mg', instructions: 'Twice a day', prescribedById: 'doc01', prescribedAt: '2023-10-27T09:00:00Z', status: PrescriptionStatus.Pending },
-    { id: 'presc002', patientId: 'p002', medicationId: 'med02', dosage: '200mg', instructions: 'Once a day with food', prescribedById: 'doc01', prescribedAt: '2023-10-27T09:15:00Z', status: PrescriptionStatus.Pending },
-    { id: 'presc003', patientId: 'p003', medicationId: 'med03', dosage: '10mg', instructions: 'Once daily in the morning', prescribedById: 'doc02', prescribedAt: '2023-10-27T09:30:00Z', status: PrescriptionStatus.Pending },
-];
+// This type is also used by the validation modal
+export interface EnrichedPrescription extends Prescription {
+    patientName: string;
+    patientRoom: string;
+    allergies: string[];
+}
 
-const PrescriptionItem: React.FC<{ prescription: Prescription }> = ({ prescription }) => (
-    <li className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-700/50 rounded-md">
-        <div>
-            <p className="font-semibold">ID do Paciente: {prescription.patientId}</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">ID da Medicação: {prescription.medicationId} - {prescription.dosage}</p>
-        </div>
-        <button 
-            onClick={() => alert(`A dispensar ${prescription.medicationId} para o paciente ${prescription.patientId}.`)}
-            className="flex items-center space-x-2 px-3 py-1.5 text-sm font-medium text-green-600 bg-green-100 dark:bg-green-900/50 dark:text-green-300 rounded-full hover:bg-green-200 dark:hover:bg-green-800 transition">
-            <span>{ICONS.check}</span>
-            <span>Dispensar</span>
-        </button>
-    </li>
-);
+const PrescriptionItem: React.FC<{ 
+    prescription: EnrichedPrescription; 
+    onSelect: (prescription: EnrichedPrescription) => void 
+}> = ({ prescription, onSelect }) => {
+    const isPending = prescription.status === PrescriptionStatus.Pending;
+
+    return (
+        <li>
+            <button
+                onClick={() => onSelect(prescription)}
+                disabled={!isPending}
+                className={`w-full text-left p-4 rounded-xl transition-all border ${
+                    isPending 
+                        ? 'bg-white border-blue-200 shadow-sm hover:shadow-md hover:border-blue-400 dark:bg-slate-800 dark:border-slate-700' 
+                        : 'bg-gray-50 border-gray-100 text-gray-500 dark:bg-slate-800/50 dark:border-transparent dark:text-gray-500 opacity-60 cursor-not-allowed'
+                }`}
+            >
+                <div className="flex justify-between items-center">
+                    <div>
+                        <p className="font-bold text-lg text-blue-900 dark:text-blue-100">{prescription.medicationId} {prescription.dosage}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{prescription.patientName} - Quarto {prescription.patientRoom}</p>
+                    </div>
+                    <span className={`text-xs font-bold px-3 py-1 rounded-full border ${isPending ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-900' : 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700'}`}>
+                        {prescription.status}
+                    </span>
+                </div>
+            </button>
+        </li>
+    );
+};
+
 
 const PharmacistDashboard: React.FC = () => {
+    const initialPrescriptions = useMemo((): EnrichedPrescription[] => {
+        const allPrescriptions: EnrichedPrescription[] = [];
+        mockPatients.forEach(patient => {
+            if (patient.prescriptions) {
+                patient.prescriptions.forEach(p => {
+                    allPrescriptions.push({
+                        ...p,
+                        patientName: patient.name,
+                        patientRoom: patient.room,
+                        allergies: patient.allergies,
+                    });
+                });
+            }
+        });
+        return allPrescriptions.sort((a, b) => {
+            if (a.status === PrescriptionStatus.Pending && b.status !== PrescriptionStatus.Pending) return -1;
+            if (a.status !== PrescriptionStatus.Pending && b.status === PrescriptionStatus.Pending) return 1;
+            return new Date(b.prescribedAt).getTime() - new Date(a.prescribedAt).getTime()
+        });
+    }, []);
+
+    const [prescriptions, setPrescriptions] = useState<EnrichedPrescription[]>(initialPrescriptions);
+    const [selectedPrescription, setSelectedPrescription] = useState<EnrichedPrescription | null>(null);
+
+    const handleApprove = (prescriptionId: string) => {
+        setPrescriptions(prev => prev.map(p => p.id === prescriptionId ? { ...p, status: PrescriptionStatus.Dispensed } : p));
+        setSelectedPrescription(null);
+    };
+
+    const handleReject = (prescriptionId: string, reason: string) => {
+        console.log(`Prescription ${prescriptionId} rejected. Reason: ${reason}`);
+        setPrescriptions(prev => prev.map(p => p.id === prescriptionId ? { ...p, status: PrescriptionStatus.Cancelled } : p));
+        setSelectedPrescription(null);
+    };
+
+    const pendingPrescriptions = prescriptions.filter(p => p.status === PrescriptionStatus.Pending);
+    const processedPrescriptions = prescriptions.filter(p => p.status !== PrescriptionStatus.Pending);
+    
     return (
-        <div className="p-4 space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Painel do Farmacêutico(a)</h1>
-                 <button
-                    onClick={() => alert('A abrir a câmara para escanear o código QR da prescrição...')} 
-                    className="flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition">
-                    <span>{ICONS.qrCode}</span>
-                    <span>Escanear Prescrição</span>
-                </button>
-            </div>
+        <div className="p-4 space-y-6 animate-fade-in">
+             {selectedPrescription && (
+                <PrescriptionValidationModal 
+                    prescription={selectedPrescription}
+                    onApprove={handleApprove}
+                    onReject={handleReject}
+                    onClose={() => setSelectedPrescription(null)}
+                />
+            )}
+            <h1 className="text-3xl font-bold text-blue-900 dark:text-white">Painel de Farmácia</h1>
             
-            <Card title="Prescrições Pendentes para Dispensar">
-                 <div className="mb-4">
-                    <input type="text" placeholder="Procurar por ID do Paciente ou Medicação..." className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-transparent"/>
-                </div>
-                <ul className="space-y-3">
-                    {mockPrescriptions.map(p => <PrescriptionItem key={p.id} prescription={p} />)}
-                </ul>
+            <Card title="Aguardando Validação">
+                {pendingPrescriptions.length > 0 ? (
+                    <ul className="space-y-4">
+                        {pendingPrescriptions.map(p => (
+                            <PrescriptionItem key={p.id} prescription={p} onSelect={setSelectedPrescription} />
+                        ))}
+                    </ul>
+                ) : (
+                    <p className="text-center text-blue-400 dark:text-gray-400 py-6 font-medium">Todas as prescrições foram validadas.</p>
+                )}
             </Card>
 
-            <Card title="Estatísticas Rápidas">
-                <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                        <p className="text-3xl font-bold text-green-500">128</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Dispensados Hoje</p>
-                    </div>
-                     <div>
-                        <p className="text-3xl font-bold text-yellow-500">3</p>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Pendentes</p>
-                    </div>
-                </div>
+            <Card title="Histórico Recente">
+                 {processedPrescriptions.length > 0 ? (
+                    <ul className="space-y-4 max-h-80 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-blue-100">
+                        {processedPrescriptions.map(p => (
+                            <PrescriptionItem key={p.id} prescription={p} onSelect={() => {}} />
+                        ))}
+                    </ul>
+                ) : (
+                     <p className="text-center text-gray-400 dark:text-gray-500 py-4">Nenhum histórico disponível.</p>
+                )}
             </Card>
         </div>
     );

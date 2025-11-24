@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import { ICONS } from '../../constants';
@@ -9,19 +8,19 @@ const Header: React.FC = () => {
     if (!currentUser) return null;
 
     return (
-        <header className="bg-white dark:bg-gray-800/50 backdrop-blur-sm sticky top-0 z-10 border-b border-gray-200 dark:border-gray-700">
+        <header className="bg-white dark:bg-slate-800 sticky top-0 z-20 border-b border-blue-200 dark:border-slate-700 shadow-sm transition-colors duration-200">
             <div className="flex items-center justify-between p-4">
                 <div>
-                    <h1 className="text-xl font-bold text-primary-600 dark:text-primary-400">MedFlow</h1>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Bem-vindo(a), {currentUser.name}</p>
+                    <h1 className="text-2xl font-bold text-blue-700 dark:text-blue-400">MedFlow</h1>
+                    <p className="text-xs text-blue-500 dark:text-gray-400 font-medium">Bem-vindo(a), {currentUser.name}</p>
                 </div>
                 <div className="flex items-center space-x-3">
-                    <button onClick={toggleTheme} className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <button onClick={toggleTheme} className="p-2 rounded-full text-blue-400 dark:text-gray-400 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors">
                         {theme === 'light' ? ICONS.moon : ICONS.sun}
                     </button>
-                    <button onClick={logout} className="flex items-center space-x-2 px-3 py-1.5 text-sm font-medium text-red-600 bg-red-100 dark:bg-red-900/50 dark:text-red-400 rounded-full hover:bg-red-200 dark:hover:bg-red-900 transition">
+                    <button onClick={logout} className="flex items-center space-x-2 px-3 py-1.5 text-sm font-bold text-red-600 bg-red-50 dark:bg-red-900/30 dark:text-red-300 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors border border-red-100 dark:border-red-900">
                         <span>{ICONS.logout}</span>
-                        <span>Sair</span>
+                        <span className="hidden sm:inline">Sair</span>
                     </button>
                 </div>
             </div>

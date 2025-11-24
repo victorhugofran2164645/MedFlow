@@ -1,61 +1,131 @@
-import React from 'react';
-import { MedicationStock as MedicationStockType } from '../../types';
+import React, { useState, useMemo } from 'react';
+import { MedicationStock as MedicationStockType, StockFilter } from '../../types';
 import Card from './Card';
-import { ICONS } from '../../constants';
-
-const mockMedicationStock: MedicationStockType[] = [
-    { id: 'med01', name: 'Paracetamol', manufacturer: 'PharmaCo', dosage: '500mg', form: 'Tablet', stockId: 'stk001', lotNumber: 'A123', expiryDate: '2025-12-31', quantity: 500 },
-    { id: 'med02', name: 'Ibuprofen', manufacturer: 'HealthInc', dosage: '200mg', form: 'Tablet', stockId: 'stk002', lotNumber: 'B456', expiryDate: '2024-06-30', quantity: 80 },
-    { id: 'med03', name: 'Aspirin', manufacturer: 'MediLife', dosage: '100mg', form: 'Tablet', stockId: 'stk003', lotNumber: 'C789', expiryDate: '2023-11-30', quantity: 25 },
-    { id: 'med04', name: 'Amoxicillin', manufacturer: 'PharmaCo', dosage: '250mg', form: 'Capsule', stockId: 'stk004', lotNumber: 'D012', expiryDate: '2025-02-28', quantity: 200 },
-];
+import { ICONS, mockMedicationStock } from '../../constants';
 
 const getStatusColor = (quantity: number, expiryDate: string): string => {
-    const isExpiringSoon = new Date(expiryDate) < new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-    const isExpired = new Date(expiryDate) < new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     
-    if (isExpired || quantity < 30) return 'border-red-500 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30';
-    if (isExpiringSoon || quantity < 100) return 'border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20 hover:bg-yellow-100 dark:hover:bg-yellow-900/30';
-    return 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/50 hover:bg-gray-50 dark:hover:bg-gray-700/50';
-}
+    const parts = expiryDate.split('-').map(part => parseInt(part, 10));
+    const expiry = new Date(parts[0], parts[1] - 1, parts[2]);
+
+    const isExpired = expiry < today;
+    
+    // Vermelho: Stock baixo ou expirado
+    if (quantity <= 300 || isExpired) {
+        return 'border-l-4 border-l-red-500 bg-white dark:bg-slate-800 border-y border-r border-red-100 dark:border-red-900/30';
+    }
+    
+    // Verde: Stock saudável - Estilo Blue/White limpo
+    return 'border-l-4 border-l-emerald-500 bg-white dark:bg-slate-800 border-y border-r border-blue-100 dark:border-slate-700';
+};
+
+
+const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+    const correctedDate = new Date(date.getTime() + userTimezoneOffset);
+
+    const day = correctedDate.getDate().toString().padStart(2, '0');
+    const month = (correctedDate.getMonth() + 1).toString().padStart(2, '0');
+    const year = correctedDate.getFullYear();
+    return `${day}/${month}/${year}`;
+};
+
 
 const MedicationStockItem: React.FC<{ item: MedicationStockType }> = ({ item }) => (
     <li>
         <button
             onClick={() => alert(`A ver detalhes do stock para ${item.name} (Lote: ${item.lotNumber}).`)}
-            className={`w-full text-left p-3 rounded-lg border-l-4 transition-colors ${getStatusColor(item.quantity, item.expiryDate)}`}
+            className={`w-full text-left p-4 rounded-xl shadow-sm hover:shadow-md transition-all ${getStatusColor(item.quantity, item.expiryDate)}`}
         >
             <div className="flex justify-between items-start">
                 <div>
-                    <p className="font-bold text-lg">{item.name} <span className="font-normal text-sm text-gray-500 dark:text-gray-400">{item.dosage}</span></p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">{item.manufacturer} | Lote: {item.lotNumber}</p>
+                    <p className="font-bold text-lg text-blue-900 dark:text-white">{item.name} <span className="font-medium text-sm text-gray-500 dark:text-gray-400 ml-1">{item.dosage}</span></p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.manufacturer} <span className="mx-1">•</span> Lote: {item.lotNumber}</p>
                 </div>
                 <div className="text-right">
-                    <p className="font-bold text-xl">{item.quantity}</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Expira: {item.expiryDate}</p>
+                    <p className="font-bold text-xl text-blue-800 dark:text-blue-300">{item.quantity}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Exp: {formatDate(item.expiryDate)}</p>
                 </div>
             </div>
         </button>
     </li>
 );
 
-const MedicationStock: React.FC = () => {
+interface MedicationStockProps {
+    stockFilter: StockFilter;
+    setStockFilter: (filter: StockFilter) => void;
+}
+
+const MedicationStock: React.FC<MedicationStockProps> = ({ stockFilter, setStockFilter }) => {
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const filteredStock = useMemo(() => {
+        let items = mockMedicationStock;
+
+        if (stockFilter === 'low_stock') {
+            items = items.filter(item => item.quantity <= 300 && item.quantity > 0);
+        } else if (stockFilter === 'expiring_soon') {
+            const thirtyDaysFromNow = new Date();
+            thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            items = items.filter(item => {
+                const expiry = new Date(item.expiryDate);
+                return expiry < thirtyDaysFromNow && expiry >= today;
+            });
+        }
+
+        if (searchTerm.trim() !== '') {
+            const lowercasedTerm = searchTerm.toLowerCase();
+            items = items.filter(item =>
+                item.name.toLowerCase().includes(lowercasedTerm) ||
+                item.lotNumber.toLowerCase().includes(lowercasedTerm)
+            );
+        }
+        return items;
+    }, [stockFilter, searchTerm]);
+
+    const filterMessages = {
+        low_stock: 'A mostrar apenas medicamentos com stock baixo (300 unidades ou menos).',
+        expiring_soon: 'A mostrar apenas medicamentos a expirar nos próximos 30 dias.',
+    };
+
     return (
         <div className="p-4 space-y-4">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100">Stock de Medicação</h1>
+            <div className="flex justify-between items-center mb-2">
+                <h1 className="text-3xl font-bold text-blue-900 dark:text-white">Stock</h1>
                 <button
                     onClick={() => alert('A abrir formulário para adicionar novo stock de medicação.')}
-                    className="flex items-center space-x-2 px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition">
+                    className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-sm font-semibold">
                     <span>{ICONS.plus}</span>
-                    <span>Adicionar Stock</span>
+                    <span className="hidden sm:inline">Adicionar</span>
                 </button>
             </div>
-             <div className="sticky top-0 bg-gray-50 dark:bg-black py-2">
-                <input type="text" placeholder="Procurar medicação por nome ou lote..." className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-800"/>
+
+            {stockFilter !== 'all' && (
+                <div className="flex items-center p-3 bg-white border border-blue-200 text-blue-800 dark:bg-blue-900/30 dark:border-blue-800 dark:text-blue-200 rounded-lg animate-fade-in shadow-sm">
+                    <p className="text-sm font-semibold">
+                        {filterMessages[stockFilter]}
+                    </p>
+                </div>
+            )}
+
+             <div className="sticky top-0 bg-blue-50 dark:bg-slate-900 py-2 z-10">
+                <input
+                    type="text"
+                    placeholder="Procurar medicação por nome ou lote..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    className="w-full p-3 border border-blue-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm transition-all"/>
             </div>
-            <ul className="space-y-3">
-                {mockMedicationStock.map(item => <MedicationStockItem key={item.stockId} item={item} />)}
+            <ul className="space-y-4">
+                {filteredStock.length > 0
+                    ? filteredStock.map(item => <MedicationStockItem key={item.stockId} item={item} />)
+                    : <p className="text-center text-gray-500 dark:text-gray-400 py-6">Nenhum medicamento encontrado.</p>
+                }
             </ul>
         </div>
     );

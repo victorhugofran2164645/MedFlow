@@ -1,10 +1,10 @@
 
+
 export enum UserRole {
     Admin = 'Administrador',
     Doctor = 'Médico',
     Nurse = 'Enfermeiro(a)',
     Pharmacist = 'Farmacêutico(a)',
-    Visitor = 'Visitante'
 }
 
 export interface User {
@@ -28,11 +28,22 @@ export interface MedicationStock extends Medication {
     quantity: number;
 }
 
+export interface AdministrationRecord {
+    id: string;
+    medication: string;
+    dosage: string;
+    administeredAt: string;
+    administeredBy: string;
+    notes?: string;
+}
+
 export interface Patient {
     id: string;
     name: string;
     room: string;
     allergies: string[];
+    prescriptions?: Prescription[];
+    administrationHistory?: AdministrationRecord[];
 }
 
 export enum PrescriptionStatus {
@@ -71,3 +82,18 @@ export interface AuditLog {
     action: string;
     details: string;
 }
+
+export interface Task {
+    id: string;
+    patientId: string;
+    patientName: string;
+    room: string;
+    medication: string;
+    dosage: string;
+    instructions: string;
+    time: string;
+    overdue?: boolean;
+    completedAt?: string;
+}
+
+export type StockFilter = 'all' | 'low_stock' | 'expiring_soon';

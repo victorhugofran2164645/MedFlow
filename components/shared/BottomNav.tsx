@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAppContext } from '../../contexts/AppContext';
 import { UserRole } from '../../types';
@@ -10,10 +9,10 @@ interface BottomNavProps {
 }
 
 const NavItem: React.FC<{ icon: React.ReactNode; label: string; name: string; active: boolean; onClick: () => void }> = ({ icon, label, name, active, onClick }) => (
-    <button onClick={onClick} className={`flex flex-col items-center justify-center w-full pt-2 pb-1 transition-colors duration-200 ${active ? 'text-primary-600 dark:text-primary-400' : 'text-gray-500 dark:text-gray-400 hover:text-primary-500'}`}>
+    <button onClick={onClick} className={`flex flex-col items-center justify-center w-full pt-3 pb-2 transition-colors duration-200 ${active ? 'text-blue-700 dark:text-blue-400' : 'text-gray-400 dark:text-gray-500 hover:text-blue-500'}`}>
         {icon}
-        <span className="text-xs mt-1">{label}</span>
-        {active && <div className="w-12 h-0.5 bg-primary-600 dark:bg-primary-400 mt-1 rounded-full"></div>}
+        <span className="text-[10px] font-semibold mt-1 uppercase tracking-wide">{label}</span>
+        <div className={`w-12 h-1 mt-1 rounded-full transition-all duration-300 ${active ? 'bg-blue-600 dark:bg-blue-400' : 'bg-transparent'}`}></div>
     </button>
 );
 
@@ -23,16 +22,16 @@ const BottomNav: React.FC<BottomNavProps> = ({ activeTab, setActiveTab }) => {
     const navItems = [
         { name: 'home', label: 'Início', icon: ICONS.home, roles: [UserRole.Admin, UserRole.Doctor, UserRole.Nurse, UserRole.Pharmacist] },
         { name: 'stock', label: 'Stock', icon: ICONS.pills, roles: [UserRole.Admin, UserRole.Pharmacist] },
-        { name: 'patients', label: 'Pacientes', icon: ICONS.users, roles: [UserRole.Admin, UserRole.Doctor, UserRole.Nurse] },
+        { name: 'patients', label: 'Pacientes', icon: ICONS.users, roles: [UserRole.Admin, UserRole.Nurse] },
         { name: 'audit', label: 'Auditoria', icon: ICONS.history, roles: [UserRole.Admin] },
     ];
     
     const availableItems = navItems.filter(item => currentUser && item.roles.includes(currentUser.role));
 
-    if (!currentUser || currentUser.role === UserRole.Visitor) return null;
+    if (!currentUser) return null;
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 max-w-4xl mx-auto bg-white dark:bg-gray-800/80 backdrop-blur-sm border-t border-gray-200 dark:border-gray-700 shadow-t-lg">
+        <div className="fixed bottom-0 left-0 right-0 max-w-4xl mx-auto bg-white dark:bg-slate-800 border-t border-blue-200 dark:border-slate-700 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-20">
             <div className="flex justify-around">
                 {availableItems.map(item => (
                     <NavItem
