@@ -1,3 +1,4 @@
+
 import React from 'react';
 import Card from '../shared/Card';
 import { StockFilter } from '../../types';
@@ -115,6 +116,23 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ setActiveTab, setStockF
         return expiry < thirtyDaysFromNow && expiry >= today;
     }).length;
 
+    const handleDownloadReport = () => {
+        const headers = ["ID", "Medicamento", "Fabricante", "Dosagem", "Lote", "Validade", "Quantidade"];
+        const rows = mockMedicationStock.map(item =>
+            [item.id, item.name, item.manufacturer, item.dosage, item.lotNumber, item.expiryDate, item.quantity].join(",")
+        );
+
+        const csvContent = [headers.join(","), ...rows].join("\n");
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `medflow_relatorio_estoque_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     return (
         <div className="p-4 space-y-6 animate-fade-in">
             <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-6">Painel do Administrador</h1>
@@ -157,10 +175,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ setActiveTab, setStockF
                 <div className="lg:col-span-2">
                      <Card title="Ações Rápidas">
                         <div className="grid grid-cols-2 gap-3">
-                            <button onClick={() => setActiveTab('userManagement')} className="p-4 text-sm font-semibold bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition shadow-md">Gerir Utilizadores</button>
-                            <button onClick={() => alert('Funcionalidade em desenvolvimento.')} className="p-4 text-sm font-semibold bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition">Relatórios</button>
-                            <button onClick={() => alert('Funcionalidade em desenvolvimento.')} className="p-4 text-sm font-semibold bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition">Configurações</button>
-                            <button onClick={() => setActiveTab('audit')} className="p-4 text-sm font-semibold bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition">Auditoria</button>
+                            <button onClick={() => setActiveTab('userManagement')} className="p-4 text-sm font-semibold bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition shadow-md flex flex-col items-center justify-center gap-2">
+                                {ICONS.users}
+                                <span>Gerir Utilizadores</span>
+                            </button>
+                            <button onClick={handleDownloadReport} className="p-4 text-sm font-semibold bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition flex flex-col items-center justify-center gap-2">
+                                {ICONS.download}
+                                <span>Salvar Relatórios</span>
+                            </button>
+                            <button onClick={() => alert('Funcionalidade em desenvolvimento.')} className="p-4 text-sm font-semibold bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition flex flex-col items-center justify-center gap-2">
+                                {ICONS.edit}
+                                <span>Configurações</span>
+                            </button>
+                            <button onClick={() => setActiveTab('audit')} className="p-4 text-sm font-semibold bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition flex flex-col items-center justify-center gap-2">
+                                {ICONS.history}
+                                <span>Auditoria</span>
+                            </button>
                         </div>
                     </Card>
                 </div>
