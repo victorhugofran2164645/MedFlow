@@ -12,7 +12,7 @@ const MOCK_USERS: User[] = [
 const RoleCard: React.FC<{ user: User; onSelect: (user: User) => void }> = ({ user, onSelect }) => (
     <button
         onClick={() => onSelect(user)}
-        className="w-full text-left p-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 hover:shadow-md hover:bg-gray-50 dark:hover:bg-slate-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+        className="w-full text-left p-4 bg-gray-100 dark:bg-slate-800 rounded-xl shadow-sm border border-gray-300 dark:border-slate-700 hover:shadow-md hover:bg-gray-200 dark:hover:bg-slate-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
     >
         <h3 className="text-lg font-bold text-gray-800 dark:text-gray-200">{user.role}</h3>
         <p className="text-gray-600 dark:text-gray-400">Entrar como {user.name}</p>
